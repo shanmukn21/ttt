@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe</title>
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+        }
+        #mb {
+            font-family: Arial, Helvetica, sans-serif;
+            display: flex;
+            height: 100vh;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #board {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            background-color: black;
+            height: 500px;
+            width: 500px;
+        }
+
+        #board div {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+        }
+
+        #board div div {
+            font-size: 160px;
+            color: black;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            height: 140px;
+            width: 140px;
+        }
+        .start{
+            display: flex;
+        }
+        #mb,
+        .status,
+        .start {
+            flex-direction: column;
+        }
+
+        #buttons {
+            display: flex;
+            flex-direction: row;
+            gap: 30px;
+        }
+
+        button {
+            border-radius: 30px;
+            color: white;
+            background-color: black;
+            width: 100px;
+            height: 30px;
+        }
+
+        @media (max-width: 600px) {
+            #board {
+                height: 350px;
+                width: 350px;
+            }
+
+            #board div div {
+                font-size: 120px;
+                height: 100px;
+                width: 100px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="mb">
+        <div class="start">
+            <h1>First to play gets 'X'</h1>
+            <h2>Do you wanna play first</h2>
+            <div id="buttons">
+                <button onclick="yes()">Yes</button>
+                <button onclick="no()">No</button>
+            </div>
+        </div>
+        <div class="status" style="display:none;margin-bottom:30px">
+            <h1 class="wld"></h1>
+            <button class="restart" onclick="restart()">Restart</button>
+        </div>
+        <div id="board" class="board" style="display:none;">
+            <div id="r1">
+                <div id="a11"></div>
+                <div id="a12"></div>
+                <div id="a13"></div>
+            </div>
+            <div id="r2">
+                <div id="a21"></div>
+                <div id="a22"></div>
+                <div id="a23"></div>
+            </div>
+            <div id="r3">
+                <div id="a31"></div>
+                <div id="a32"></div>
+                <div id="a33"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let status = document.querySelector('.status');
+        let mb = document.querySelector('#mb');
+        let wld = document.querySelector('.wld');
+        let start = document.querySelector('.start');
+        let board = document.querySelector('.board');
+        let cwf=0,ch, n = 0, i, j, k, hl = [], ml = [], hlc = 0, mlc = 0, num = 1, sh, o, ai, h,
+            a = [
+                [4, 9, 2],
+                [3, 5, 7],
+                [8, 1, 6]
+            ],
+            t = [
+                [7, 8, 9],
+                [4, 5, 6],
+                [1, 2, 3]
+            ];
+        function yes() {
+            ai = 'O';
+            h = 'X';
+            start.style.display = 'none';
+            board.style.display = 'flex';
+        }
+        function no() {
+            ai = 'X';
+            h = 'O';
+            machine();
+            start.style.display = 'none';
+            board.style.display = 'flex';
+        }
+        function restart() {
+            mb.style.backgroundColor='white';
+            cwf=0,ch, n = 0, i, j, k, hl = [], ml = [], hlc = 0, mlc = 0, num = 1, sh, o, ai, h,
+                t = [
+                    [7, 8, 9],
+                    [4, 5, 6],
+                    [1, 2, 3]
+                ];
+            start.style.display = 'flex';
+            status.style.display = 'none';
+            board.style.display = 'none';
+            for (i = 1; i <= 3; i++)
+                for (j = 1; j <= 3; j++)
+                    document.getElementById('a' + `${i}${j}`).textContent = '';
+        }
+        for (i = 1; i <= 3; i++)
+            for (j = 1; j <= 3; j++) {
+                let divb = document.getElementById('a' + `${i}${j}`);
+                divb.data = i;
+                divb.className = j;
+                divb.addEventListener('click', function () {
+                    if (status.style.display === 'none') {
+                        if (divb.textContent === '') {
+                            n++;
+                            divb.textContent = h;
+                            hl[hlc++] = a[parseInt(divb.data) - 1][parseInt(divb.className) - 1];
+                            checkwin();
+                            if (n < 9 &&cwf==0)
+                                machine();
+                        }
+                    }
+                });
+            }
+
+        function posswin(f) {
+            for (i = 0; i < 4; i++)
+                for (j = i + 1; j < 5; j++) {
+                    if (f === 0) {
+                        if (hl[i] !== 0 && hl[j] !== 0)
+                            sh = 15 - (hl[i] + hl[j]);
+                    } else {
+                        if (ml[i] !== 0 && ml[j] !== 0)
+                            sh = 15 - (ml[i] + ml[j]);
+                    }
+                    let cnv = cnvrt(sh);
+                    if (empt(sh) && cnv < 10 && cnv > 0)
+                        return cnv;
+                }
+            return 0;
+        }
+        function cnvrt(cnvr) {
+            for (let x2 = 0; x2 < 3; x2++)
+                for (let y2 = 0; y2 < 3; y2++)
+                    if (a[x2][y2] == cnvr)
+                        return t[x2][y2];
+            return -2;
+        }
+        function cnvrtr(cnvr) {
+            for (let x2 = 0; x2 < 3; x2++)
+                for (let y2 = 0; y2 < 3; y2++)
+                    if (t[x2][y2] == cnvr)
+                        return a[x2][y2];
+            return -2;
+        }
+        function rndm() {
+            do {
+                ch = cnvrtr(num);
+                num = num + 1;
+            } while (!((empt(ch)) && (ch > 0) && (ch < 10)));
+            ch = cnvrt(ch);
+            num = 1;
+        }
+
+        function machine() {
+            let t1, t2;
+            if (n > 2) {
+                t1 = posswin(0), t2 = posswin(1);
+            }
+            if (n === 0)
+                ch = 5;
+            else if (n === 1) {
+                if (empt(5))
+                    ch = 5;
+                else
+                    ch = 1;
+            } else if (n === 2) {
+                if (empt(8))
+                    ch = 1;
+                else
+                    rndm();
+            } else if (n === 3) {
+                if (t1 != 0)
+                    ch = t1;
+                else if (t2 != 0)
+                    ch = t2;
+                else
+                    rndm();
+            } else if (n > 3) {
+                if (t2 != 0)
+                    ch = t2;
+                else if (t1 != 0)
+                    ch = t1;
+                else
+                    rndm();
+            }
+            for (i = 1; i <= 3; i++)
+                for (j = 1; j <= 3; j++)
+                    if (ch === t[i - 1][j - 1]) {
+                        if (empt(cnvrtr(ch))) {
+                            document.getElementById('a' + `${i}${j}`).textContent = ai;
+                            n++;
+                            ml[mlc++] = cnvrtr(ch);
+                            checkwin();
+                        }
+                    }
+        }
+        function empt(cho) {
+            for (let x = 0; x < 5; x++)
+                if (hl[x] == cho || ml[x] == cho)
+                    return 0;
+            return 1;
+        }
+
+        function checkwin() {
+            for (let i3 = 0; i3 < 3; i3++)
+                for (let j3 = i3 + 1; j3 < 4; j3++)
+                    for (let k3 = j3 + 1; k3 < 5; k3++) {
+                        if ((hl[i3] !== 0 && hl[j3] !== 0 && hl[k3] !== 0) && (hl[i3] + hl[j3] + hl[k3] === 15)) {
+                            status.style.display = 'flex';
+                            mb.style.backgroundColor='green';
+                            wld.textContent = "You Won!";
+                            cwf=1;
+                        } else if ((ml[i3] !== 0 && ml[j3] !== 0 && ml[k3] !== 0) && (ml[i3] + ml[j3] + ml[k3] === 15)) {
+                            status.style.display = 'flex';
+                            mb.style.backgroundColor='red';
+                            wld.textContent = "You Lost!";
+                            cwf=1;
+                        } else if (n === 9) {
+                            status.style.display = 'flex';
+                            mb.style.backgroundColor='yellow';
+                            wld.textContent = "Draw!";
+                            cwf=1;
+                        }
+                    }
+        }
+    </script>
+</body>
+
+</html>
