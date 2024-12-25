@@ -7,13 +7,18 @@
     <title>Tic-Tac-Toe</title>
     <style>
         body{
+            height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
             margin: 0;
             padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
         #mb {
-            font-family: Arial, Helvetica, sans-serif;
             display: flex;
-            height: 100vh;
+            height: 70vh;
             align-items: center;
             justify-content: center;
         }
@@ -50,6 +55,7 @@
         .status,
         .start {
             flex-direction: column;
+            align-items: center;
         }
 
         #buttons {
@@ -82,6 +88,7 @@
 </head>
 
 <body>
+    <h1>Tick Tack Toe</h1>
     <div id="mb">
         <div class="start">
             <h1>First to play gets 'X'</h1>
@@ -144,7 +151,6 @@
             board.style.display = 'flex';
         }
         function restart() {
-            mb.style.backgroundColor='white';
             cwf=0,ch, n = 0, i, j, k, hl = [], ml = [], hlc = 0, mlc = 0, num = 1, sh, o, ai, h,
                 t = [
                     [7, 8, 9],
@@ -272,17 +278,14 @@
                     for (let k3 = j3 + 1; k3 < 5; k3++) {
                         if ((hl[i3] !== 0 && hl[j3] !== 0 && hl[k3] !== 0) && (hl[i3] + hl[j3] + hl[k3] === 15)) {
                             status.style.display = 'flex';
-                            mb.style.backgroundColor='green';
                             wld.textContent = "You Won!";
                             cwf=1;
                         } else if ((ml[i3] !== 0 && ml[j3] !== 0 && ml[k3] !== 0) && (ml[i3] + ml[j3] + ml[k3] === 15)) {
                             status.style.display = 'flex';
-                            mb.style.backgroundColor='red';
                             wld.textContent = "You Lost!";
                             cwf=1;
                         } else if (n === 9) {
                             status.style.display = 'flex';
-                            mb.style.backgroundColor='yellow';
                             wld.textContent = "Draw!";
                             cwf=1;
                         }
