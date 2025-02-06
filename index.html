@@ -6,56 +6,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tic-Tac-Toe</title>
     <style>
-        body{
+        body {
             height: 100vh;
             font-family: Arial, Helvetica, sans-serif;
+            background-color: #610fbd;
+            color: white;
             margin: 0;
             padding: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: space-evenly;
         }
+
         #mb {
+            height: 85vh;
             display: flex;
-            height: 83vh;
             align-items: center;
-            justify-content: center;
+            justify-content: space-evenly;
+        }
+
+        .container {
+            max-width: 436px;
+            max-height: 436px;
         }
 
         #board {
-            font-family: sans-serif;
-            display: flex;
+            display: none;
             flex-direction: column;
-            justify-content: space-evenly;
-            background-color: black;
-            height: 500px;
-            width: 500px;
+            gap: 8px;
+            background-color: #610fbd;
+            height: 436px;
+            width: 436px;
         }
 
         #board div {
             display: flex;
             flex-direction: row;
-            justify-content: space-evenly;
+            border-radius: 8px;
+            gap: 8px;
         }
 
         #board div div {
-            font-size: 160px;
-            color: black;
-            align-items: center;
+            font-size: 140px;
             justify-content: center;
-            background-color: white;
+            align-items: center;
+            background-color: #40084d;
             height: 140px;
             width: 140px;
         }
-        .start{
+
+        .start {
             display: flex;
         }
+
         #mb,
         .status,
         .start {
             flex-direction: column;
             align-items: center;
+        }
+
+        .status {
+            display: none;
+            margin-bottom: 30px;
+        }
+
+        .restart {
+            display: none;
         }
 
         #buttons {
@@ -66,22 +84,80 @@
 
         button {
             border-radius: 30px;
+            border-color: transparent;
             color: white;
-            background-color: black;
-            width: 100px;
+            background-color: rgb(87 15 112);
+            padding: 0px 20px;
             height: 30px;
+        }
+
+        .O {
+            color: white;
+            text-shadow:
+                0 0 5px red,
+                0 0 10px red,
+                0 0 15px red,
+                0 0 20px red,
+                0 0 30px red,
+                0 0 40px red;
+        }
+
+        .X {
+            color: white;
+            text-shadow:
+                0 0 5px blue,
+                0 0 10px blue,
+                0 0 15px blue,
+                0 0 20px blue,
+                0 0 30px blue,
+                0 0 40px blue;
+        }
+
+        .line {
+            position: absolute;
+            background-color: white;
+            height: 10px;
+            z-index: 1;
+            width: 0px;
+        }
+
+        .Xl {
+            box-shadow: 0 0 5px blue, 0 0 10px blue, 0 0 15px blue, 0 0 20px blue, 0 0 30px blue, 0 0 40px blue;
+        }
+
+        .Ol {
+            box-shadow: 0 0 5px red, 0 0 10px red, 0 0 15px red, 0 0 20px red, 0 0 30px red, 0 0 40px red;
+        }
+
+        #winningLine {
+            border-radius: 8px;
+            margin: 8px;
+            min-width: 420px;
+            max-width: 594px;
+            display: none;
         }
 
         @media (max-width: 600px) {
             #board {
-                height: 350px;
-                width: 350px;
+                height: 316px;
+                width: 316px;
+            }
+
+            #board div {
+                justify-content: center;
             }
 
             #board div div {
-                font-size: 120px;
+                font-size: 100px;
                 height: 100px;
                 width: 100px;
+            }
+
+            #winningLine {
+                margin: 8px;
+                min-width: 300px;
+                max-width: 425px;
+                display: none;
             }
         }
     </style>
@@ -98,35 +174,40 @@
                 <button onclick="no()">No</button>
             </div>
         </div>
-        <div class="status" style="display:none;margin-bottom:30px">
+        <div class="status">
             <h1 class="wld"></h1>
-            <button class="restart" onclick="restart()">Restart</button>
         </div>
-        <div id="board" class="board" style="display:none;">
-            <div id="r1">
-                <div id="a11"></div>
-                <div id="a12"></div>
-                <div id="a13"></div>
-            </div>
-            <div id="r2">
-                <div id="a21"></div>
-                <div id="a22"></div>
-                <div id="a23"></div>
-            </div>
-            <div id="r3">
-                <div id="a31"></div>
-                <div id="a32"></div>
-                <div id="a33"></div>
+        <div class="container">
+            <div id="winningLine" class="line"></div>
+            <div id="board" class="board">
+                <div id="r1">
+                    <div id="a11" class="gc4"></div>
+                    <div id="a12" class="gc9"></div>
+                    <div id="a13" class="gc2"></div>
+                </div>
+                <div id="r2">
+                    <div id="a21" class="gc3"></div>
+                    <div id="a22" class="gc5"></div>
+                    <div id="a23" class="gc7"></div>
+                </div>
+                <div id="r3">
+                    <div id="a31" class="gc8"></div>
+                    <div id="a32" class="gc1"></div>
+                    <div id="a33" class="gc6"></div>
+                </div>
             </div>
         </div>
+        <button class="restart" onclick="location.reload()">Restart</button>
     </div>
     <script>
         let status = document.querySelector('.status');
         let mb = document.querySelector('#mb');
         let wld = document.querySelector('.wld');
+        let restart = document.querySelector('.restart');
         let start = document.querySelector('.start');
         let board = document.querySelector('.board');
-        let cwf=0,ch, n = 0, i, j, k, hl = [], ml = [], hlc = 0, mlc = 0, num = 1, sh, o, ai, h,
+        let winningLine = document.getElementById('winningLine');
+        let cwf = 0, ch, n = 0, i, j, k, hl = [], ml = [], hlc = 0, mlc = 0, num = 1, sh, o, ai, h,
             a = [
                 [4, 9, 2],
                 [3, 5, 7],
@@ -141,6 +222,7 @@
             ai = 'O';
             h = 'X';
             start.style.display = 'none';
+            restart.style.display = 'block';
             board.style.display = 'flex';
         }
         function no() {
@@ -148,35 +230,23 @@
             h = 'O';
             machine();
             start.style.display = 'none';
+            restart.style.display = 'block';
             board.style.display = 'flex';
-        }
-        function restart() {
-            cwf=0,ch, n = 0, i, j, k, hl = [], ml = [], hlc = 0, mlc = 0, num = 1, sh, o, ai, h,
-                t = [
-                    [7, 8, 9],
-                    [4, 5, 6],
-                    [1, 2, 3]
-                ];
-            start.style.display = 'flex';
-            status.style.display = 'none';
-            board.style.display = 'none';
-            for (i = 1; i <= 3; i++)
-                for (j = 1; j <= 3; j++)
-                    document.getElementById('a' + `${i}${j}`).textContent = '';
         }
         for (i = 1; i <= 3; i++)
             for (j = 1; j <= 3; j++) {
                 let divb = document.getElementById('a' + `${i}${j}`);
                 divb.data = i;
-                divb.className = j;
+                divb.classList.add(`${j}`);
                 divb.addEventListener('click', function () {
-                    if (status.style.display === 'none') {
+                    if (status.style.display !== 'flex') {
                         if (divb.textContent === '') {
                             n++;
                             divb.textContent = h;
-                            hl[hlc++] = a[parseInt(divb.data) - 1][parseInt(divb.className) - 1];
+                            divb.classList.add(`${h}`);
+                            hl[hlc++] = a[parseInt(divb.data) - 1][parseInt(divb.classList[1]) - 1];
                             checkwin();
-                            if (n < 9 &&cwf==0)
+                            if (n < 9 && cwf == 0)
                                 machine();
                         }
                     }
@@ -259,6 +329,7 @@
                     if (ch === t[i - 1][j - 1]) {
                         if (empt(cnvrtr(ch))) {
                             document.getElementById('a' + `${i}${j}`).textContent = ai;
+                            document.getElementById('a' + `${i}${j}`).classList.add(`${ai}`);
                             n++;
                             ml[mlc++] = cnvrtr(ch);
                             checkwin();
@@ -279,18 +350,83 @@
                         if ((hl[i3] !== 0 && hl[j3] !== 0 && hl[k3] !== 0) && (hl[i3] + hl[j3] + hl[k3] === 15)) {
                             status.style.display = 'flex';
                             wld.textContent = "You Won!";
-                            cwf=1;
+                            cwf = 1;
+                            winningLine.classList.add(`${h}l`);
+                            drawWinningLine((hl[i3]), (hl[j3]), (hl[k3]));
+                            return;
                         } else if ((ml[i3] !== 0 && ml[j3] !== 0 && ml[k3] !== 0) && (ml[i3] + ml[j3] + ml[k3] === 15)) {
                             status.style.display = 'flex';
                             wld.textContent = "You Lost!";
-                            cwf=1;
+                            cwf = 1;
+                            winningLine.classList.add(`${ai}l`);
+                            drawWinningLine((ml[i3]), (ml[j3]), (ml[k3])); 
+                            return;
                         } else if (n === 9) {
                             status.style.display = 'flex';
                             wld.textContent = "Draw!";
-                            cwf=1;
+                            cwf = 1;
                         }
                     }
         }
+        let winwidth = 0;
+        function drawWinningLine(i3, j3, k3) {
+
+            winningLine.style.display = 'block';
+            let wls = cnvrtr(Math.max(cnvrt(i3), cnvrt(j3), cnvrt(k3)));
+            let wle = cnvrtr(Math.min(cnvrt(i3), cnvrt(j3), cnvrt(k3)));
+            let wlc = 15 - (wls + wle);
+
+            const startdiv = document.querySelector(`.gc${wls}`).getBoundingClientRect();
+            const enddiv = document.querySelector(`.gc${wle}`).getBoundingClientRect();
+            const centerdiv = document.querySelector(`.gc${wlc}`).getBoundingClientRect();
+
+            const windiv = winningLine.getBoundingClientRect();
+            winwidth = windiv.width + 'px';
+            winningLine.style.minWidth = '0px';
+            const startX = startdiv.left;
+            const startY = startdiv.top;
+            const endX = enddiv.left;
+            const endY = enddiv.top;
+
+            let angle = Math.atan2(endY - startY, endX - startX) * 180 / Math.PI;
+
+            if (angle === 180 || angle === 0) {
+                if (wlc === 9) {
+                    winningLine.style.top = `${windiv.top + (startdiv.width / 2)-24}px`;
+                } else if (wlc === 5) {
+                    winningLine.style.top = `${windiv.top + ((startdiv.width / 2) * 3) - 16}px`;
+                } else {
+                    winningLine.style.top = `${windiv.top + ((startdiv.width / 2) * 5) - 8}px`;
+                }
+            } else if (angle === 90 || angle === 170) {
+                winningLine.style.top = `${windiv.top + ((startdiv.width / 2) * 3) - 12}px`;
+                if (wlc === 5) {
+                } else if (wlc === 3) {
+                    winningLine.style.left = `${windiv.left - startdiv.width - 16}px`;
+                } else {
+                    winningLine.style.left = `${windiv.left + startdiv.width}px`;
+                }
+            } else {
+                if (angle < 90) {
+                    angle = 45;
+                } else {
+                    angle = 135;
+                }
+                winningLine.style.left = `${windiv.left - (startdiv.width / 2) - 24}px`;
+                winningLine.style.top = `${windiv.top + ((startdiv.width / 2) * 3) - 13}px`;
+                if (startdiv.width === 140) {
+                    winwidth = '594px';
+                } else {
+                    winwidth = '425px';
+                }
+            }
+            winningLine.style.transform = `rotate(${angle}deg)`;
+            setTimeout(chngw, 1);
+        }
+        function chngw() {
+            winningLine.style.width = winwidth;
+        }
+
     </script>
 </body>
 
