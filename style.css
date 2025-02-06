@@ -1,0 +1,157 @@
+
+body {
+    height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #610fbd;
+    color: white;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+#mb {
+    height: 85vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.container {
+    max-width: 436px;
+    max-height: 436px;
+}
+
+#board {
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    background-color: #610fbd;
+    height: 436px;
+    width: 436px;
+}
+
+#board div {
+    display: flex;
+    flex-direction: row;
+    border-radius: 8px;
+    gap: 8px;
+}
+
+#board div div {
+    font-size: 140px;
+    justify-content: center;
+    align-items: center;
+    background-color: #40084d;
+    height: 140px;
+    width: 140px;
+}
+
+.start {
+    display: flex;
+}
+
+#mb,
+.status,
+.start {
+    flex-direction: column;
+    align-items: center;
+}
+
+.status {
+    display: none;
+}
+
+.restart {
+    display: none;
+}
+
+#buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+}
+
+button {
+    border-radius: 30px;
+    border-color: transparent;
+    color: white;
+    background-color: rgb(87 15 112);
+    padding: 0px 20px;
+    height: 30px;
+}
+
+.O {
+    color: white;
+    text-shadow:
+        0 0 5px red,
+        0 0 10px red,
+        0 0 15px red,
+        0 0 20px red,
+        0 0 30px red,
+        0 0 40px red;
+}
+
+.X {
+    color: white;
+    text-shadow:
+        0 0 5px blue,
+        0 0 10px blue,
+        0 0 15px blue,
+        0 0 20px blue,
+        0 0 30px blue,
+        0 0 40px blue;
+}
+
+.line {
+    position: absolute;
+    background-color: white;
+    height: 8px;
+    z-index: 1;
+    width: 0px;
+}
+
+.Xl {
+    box-shadow: 0 0 5px blue, 0 0 10px blue, 0 0 15px blue, 0 0 20px blue, 0 0 30px blue, 0 0 40px blue;
+}
+
+.Ol {
+    box-shadow: 0 0 5px red, 0 0 10px red, 0 0 15px red, 0 0 20px red, 0 0 30px red, 0 0 40px red;
+}
+
+#winningLine {
+    border-radius: 8px;
+    margin: 8px;
+    min-width: 420px;
+    max-width: 594px;
+    display: none;
+}
+.wld{
+    margin: 0px;
+}
+
+@media (max-width: 600px) {
+    #board {
+        height: 316px;
+        width: 316px;
+    }
+
+    #board div {
+        justify-content: center;
+    }
+
+    #board div div {
+        font-size: 100px;
+        height: 100px;
+        width: 100px;
+    }
+
+    #winningLine {
+        margin: 8px;
+        min-width: 300px;
+        max-width: 425px;
+        display: none;
+    }
+}
