@@ -107,17 +107,21 @@ button {
 
 .line {
     position: absolute;
-    background-color: white;
     height: 8px;
     z-index: 1;
     width: 0px;
 }
-
-.Xl {
+.chld{
+    transition: width 0.5s ease-in-out;
+    background-color: white;
+    height: 8px;
+    border-radius: 8px;
+}
+.Xl .chld{
     box-shadow: 0 0 5px blue, 0 0 10px blue, 0 0 15px blue, 0 0 20px blue, 0 0 30px blue, 0 0 40px blue;
 }
 
-.Ol {
+.Ol .chld{
     box-shadow: 0 0 5px red, 0 0 10px red, 0 0 15px red, 0 0 20px red, 0 0 30px red, 0 0 40px red;
 }
 

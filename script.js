@@ -1,4 +1,3 @@
-
 let status = document.querySelector('.status');
 let mb = document.querySelector('#mb');
 let wld = document.querySelector('.wld');
@@ -6,7 +5,7 @@ let restart = document.querySelector('.restart');
 let start = document.querySelector('.start');
 let board = document.querySelector('.board');
 let winningLine = document.getElementById('winningLine');
-let cwf = 0, ch, n = 0, i, j, k, hl = [], ml = [], hlc = 0, mlc = 0, num = 1, sh, o, ai, h,
+let cwf = 0, ch, n = 0, i, j, k, hl = [], ml = [], hlc = 0, mlc = 0, num = 1, sh, o, ai, h, winwidth = 0,
     a = [
         [4, 9, 2],
         [3, 5, 7],
@@ -17,6 +16,7 @@ let cwf = 0, ch, n = 0, i, j, k, hl = [], ml = [], hlc = 0, mlc = 0, num = 1, sh
         [4, 5, 6],
         [1, 2, 3]
     ];
+
 document.getElementById('yes').addEventListener('click', function () {
     ai = 'O';
     h = 'X';
@@ -24,6 +24,7 @@ document.getElementById('yes').addEventListener('click', function () {
     restart.style.display = 'block';
     board.style.display = 'flex';
 });
+
 document.getElementById('no').addEventListener('click', function () {
     ai = 'X';
     h = 'O';
@@ -32,6 +33,7 @@ document.getElementById('no').addEventListener('click', function () {
     restart.style.display = 'block';
     board.style.display = 'flex';
 });
+
 for (i = 1; i <= 3; i++)
     for (j = 1; j <= 3; j++) {
         let divb = document.getElementById('a' + `${i}${j}`);
@@ -68,6 +70,7 @@ function posswin(f) {
         }
     return 0;
 }
+
 function cnvrt(cnvr) {
     for (let x2 = 0; x2 < 3; x2++)
         for (let y2 = 0; y2 < 3; y2++)
@@ -75,6 +78,7 @@ function cnvrt(cnvr) {
                 return t[x2][y2];
     return -2;
 }
+
 function cnvrtr(cnvr) {
     for (let x2 = 0; x2 < 3; x2++)
         for (let y2 = 0; y2 < 3; y2++)
@@ -82,6 +86,7 @@ function cnvrtr(cnvr) {
                 return a[x2][y2];
     return -2;
 }
+
 function rndm() {
     do {
         ch = cnvrtr(num);
@@ -135,6 +140,7 @@ function machine() {
                 }
             }
 }
+
 function empt(cho) {
     for (let x = 0; x < 5; x++)
         if (hl[x] == cho || ml[x] == cho)
@@ -167,10 +173,12 @@ function checkwin() {
                 }
             }
 }
-let winwidth = 0;
+
 function drawWinningLine(i3, j3, k3) {
 
     winningLine.style.display = 'block';
+    winningLine.style.width = '0px';
+    document.querySelector('.chld').style.width = '0px';
     let wls = cnvrtr(Math.max(cnvrt(i3), cnvrt(j3), cnvrt(k3)));
     let wle = cnvrtr(Math.min(cnvrt(i3), cnvrt(j3), cnvrt(k3)));
     let wlc = 15 - (wls + wle);
@@ -223,6 +231,8 @@ function drawWinningLine(i3, j3, k3) {
     winningLine.style.transform = `rotate(${angle}deg)`;
     setTimeout(chngw, 1);
 }
+
 function chngw() {
     winningLine.style.width = winwidth;
+    document.querySelector('.chld').style.width = winwidth;
 }
