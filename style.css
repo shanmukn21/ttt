@@ -1,161 +1,415 @@
-
-body {
-    height: 100vh;
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #610fbd;
-    color: white;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
+:root {
+    --primary-color: #1a1a1a;
+    --secondary-color: #f0f0f0;
 }
 
-#mb {
-    height: 85vh;
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-family: Arial;
+    box-sizing: border-box;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s, stroke 0.3s, fill 0.3s;
+}
+
+h1 {
+    font-size: 4vh;
+}
+
+.status,
+button {
+    font-size: 3vh;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    background: var(--primary-color);
+    color: var(--secondary-color);
+    display: grid;
+    place-items: center;
+    grid-template-columns: auto;
+    grid-template-rows: 1fr 50vh 1fr;
+    position: relative;
+}
+
+header {
+    position: relative;
+    display: grid;
+    grid-template-rows: repeat(3, 33%);
+    height: 100%;
+    width: min(100%, 50vh);
+}
+
+header h1 {
+    text-align: center;
+    line-height: 2;
+    grid-row: 2 / 3;
+}
+
+header .status {
+    width: 100%;
+    justify-content: center;
     display: flex;
-    align-items: center;
-    justify-content: space-evenly;
+    align-items: end;
+    grid-row: 3 / 4;
+    margin: 0;
+    text-align: center;
+    line-height: 3.8vh;
+}
+
+header .status svg {
+    height: 4vh;
+    width: 4vh;
 }
 
 .container {
-    max-width: 436px;
-    max-height: 436px;
+    height: min(100%, 100vw);
+    aspect-ratio: 1;
+    padding: 2vh;
 }
 
 #board {
+    position: relative;
+    width: 100%;
+    height: 100%;
     display: none;
-    flex-direction: column;
-    gap: 8px;
-    background-color: #610fbd;
-    height: 436px;
-    width: 436px;
+    grid-template-columns: repeat(3, 3fr);
+    grid-template-rows: repeat(3, 3fr);
+    border: 0.5vh solid var(--secondary-color);
 }
 
-#board div {
-    display: flex;
-    flex-direction: row;
-    border-radius: 8px;
-    gap: 8px;
-}
-
-#board div div {
-    font-size: 140px;
+.gc1,
+.gc2,
+.gc3,
+.gc4,
+.gc5,
+.gc6,
+.gc7,
+.gc8,
+.gc9 {
     justify-content: center;
     align-items: center;
-    background-color: #40084d;
-    height: 140px;
-    width: 140px;
+    border: 0.5vh solid var(--secondary-color);
+    cursor: pointer;
 }
 
 .start {
+    width: 100%;
     display: flex;
-}
-
-#mb,
-.status,
-.start {
-    flex-direction: column;
+    height: 100%;
     align-items: center;
-}
-
-.status {
-    display: none;
-}
-
-.restart {
-    display: none;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
 }
 
 #buttons {
     display: flex;
     flex-direction: row;
-    gap: 30px;
+    gap: 32%;
 }
 
 button {
-    border-radius: 30px;
+    border-radius: 1vh;
     border-color: transparent;
-    color: white;
-    background-color: rgb(87 15 112);
-    padding: 0px 20px;
-    height: 30px;
-}
-
-.O {
-    color: white;
-    text-shadow:
-        0 0 5px red,
-        0 0 10px red,
-        0 0 15px red,
-        0 0 20px red,
-        0 0 30px red,
-        0 0 40px red;
-}
-
-.X {
-    color: white;
-    text-shadow:
-        0 0 5px blue,
-        0 0 10px blue,
-        0 0 15px blue,
-        0 0 20px blue,
-        0 0 30px blue,
-        0 0 40px blue;
-}
-
-.line {
-    position: absolute;
-    height: 8px;
-    z-index: 1;
-    width: 0px;
-}
-.chld{
-    transition: width 0.5s ease-in-out;
-    background-color: white;
-    height: 8px;
-    border-radius: 8px;
-}
-.Xl .chld{
-    box-shadow: 0 0 5px blue, 0 0 10px blue, 0 0 15px blue, 0 0 20px blue, 0 0 30px blue, 0 0 40px blue;
-}
-
-.Ol .chld{
-    box-shadow: 0 0 5px red, 0 0 10px red, 0 0 15px red, 0 0 20px red, 0 0 30px red, 0 0 40px red;
+    color: var(--primary-color);
+    background: var(--secondary-color);
+    padding: 0.5vh 1vh;
+    cursor: pointer;
 }
 
 #winningLine {
-    border-radius: 8px;
-    margin: 8px;
-    min-width: 420px;
-    max-width: 594px;
+    position: absolute;
+    height: 2%;
+    z-index: 1;
+    width: 0%;
+    margin: 0%;
     display: none;
 }
-.wld{
-    margin: 0px;
+
+#winningLine .chld {
+    background: var(--secondary-color);
+    height: 100%;
+    transition: all 0.3s;
+    border-radius: 1vh;
 }
 
-@media (max-width: 600px) {
-    #board {
-        height: 316px;
-        width: 316px;
-    }
+#board svg {
+    width: 100%;
+    height: 100%;
+    stroke: var(--secondary-color);
+    display: block;
+}
 
-    #board div {
-        justify-content: center;
-    }
 
-    #board div div {
-        font-size: 100px;
-        height: 100px;
-        width: 100px;
-    }
+.X svg path,
+.O svg circle {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    animation: draw 1s ease forwards;
+}
 
-    #winningLine {
-        margin: 8px;
-        min-width: 300px;
-        max-width: 425px;
-        display: none;
+.X svg path:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.X svg path:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+@keyframes draw {
+    to {
+        stroke-dashoffset: 0;
     }
+}
+
+.start button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40%;
+    aspect-ratio: 2.5;
+}
+
+.start>div {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.passive {
+    background: var(--primary-color);
+    color: var(--secondary-color);
+    border: 0.5vmin solid var(--secondary-color);
+    transition: all 0.25s ease-in-out;
+}
+
+button div {
+    width: 33%;
+    aspect-ratio: 1;
+    background-size: cover;
+}
+
+.start svg {
+    width: 100%;
+    height: 100%;
+    transition: all 0.25s ease-in-out;
+    display: block;
+}
+
+.on .swapl svg {
+    transform: translateX(200%);
+}
+
+.on .swapr svg {
+    transform: translateX(-200%);
+}
+
+svg rect {
+    fill: var(--secondary-color);
+    transition: all 0.25s ease-in-out;
+}
+
+svg circle {
+    fill: var(--primary-color);
+    transition: all 0.25s ease-in-out;
+}
+
+.swap {
+    height: 100%;
+    z-index: 10;
+    display: grid;
+    place-items: center;
+}
+
+.swap svg {
+    padding: 25%;
+    width: 100%;
+    aspect-ratio: 1;
+    background: var(--primary-color);
+}
+
+.vs {
+    display: grid;
+    place-items: center;
+    font-size: min(6vmin, 3vh);
+}
+
+.passive:hover {
+    scale: 1.05;
+}
+
+.start .play svg {
+    height: 70%;
+    width: fit-content;
+}
+
+.start .play {
+    justify-content: space-evenly;
+}
+
+.play p {
+    font-size: min(8vmin, 4vh);
+}
+
+.hvh,
+.hva {
+    transition: all 0.25s ease-in-out;
+}
+
+.active {
+    background: var(--secondary-color);
+    border: 0.5vmin solid var(--secondary-color);
+    color: var(--primary-color);
+    scale: 0.85;
+    transition: all 0.25s ease-in-out;
+}
+
+.active svg rect {
+    fill: var(--primary-color);
+}
+
+.active svg circle {
+    fill: var(--secondary-color);
+}
+
+.swap-container {
+    color: var(--secondary-color);
+}
+
+.norm {
+    /* transform: translateX(-25%); */
+    transform: translateX(33%);
+}
+
+.hipe {
+    opacity: 1;
+    /* transform: translateX(75%); */
+    transform: translateX(16.5%);
+}
+
+footer {
+    position: relative;
+    width: min(100%, 50vh);
+    height: 100%;
+}
+
+.leftplayer {
+    position: absolute;
+    bottom: 0vh;
+    left: 2vh;
+}
+
+.rightplayer {
+    position: absolute;
+    bottom: 0vh;
+    right: 2vh;
+}
+
+.home {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 2vh;
+}
+
+.restart {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 2vh;
+}
+
+.restart:focus {
+    transform: rotate(360deg);
+    transition: transform 0.6s ease-in-out;
+}
+
+footer button {
+    height: 5vh;
+    aspect-ratio: 1;
+    outline: none;
+    border: none;
+    background: transparent;
+    color: var(--primary-color);
+    padding: 0;
+}
+
+footer svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    stroke: var(--secondary-color);
+}
+
+header div {
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+    justify-content: center;
+    line-height: 1.65;
+}
+
+header svg {
+    width: 100%;
+    height: 6vh;
+    aspect-ratio: 1;
+}
+
+header .x-icon {
+    width: 80%;
+    height: 80%;
+}
+
+header .o-icon {
+    width: 80%;
+    height: 80%;
+}
+
+.hsvg,
+.aisvg {
+    padding: 7% 0%;
+}
+
+.icon-wrapper {
+    top:3.5vh;
+    left:3.5vh;
+    position: absolute;
+    width: 4vh;
+    height: 4vh;
+    cursor: pointer;
+}
+
+.icon-wrapper svg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.sun-icon {
+    opacity: 0;
+    transform: rotate(0deg);
+}
+
+.moon-icon {
+    opacity: 1;
+    transform: rotate(0deg);
+}
+
+.light-mode .sun-icon {
+    opacity: 1;
+    transform: rotate(180deg);
+}
+
+.light-mode .moon-icon {
+    opacity: 0;
+    transform: rotate(180deg);
 }

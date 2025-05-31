@@ -1,11 +1,26 @@
-let status = document.querySelector('.status');
-let mb = document.querySelector('#mb');
-let wld = document.querySelector('.wld');
-let restart = document.querySelector('.restart');
-let start = document.querySelector('.start');
-let board = document.querySelector('.board');
-let winningLine = document.getElementById('winningLine');
-let cwf = 0, ch, n = 0, i, j, k, hl = [], ml = [], hlc = 0, mlc = 0, num = 1, sh, o, ai, h, winwidth = 0,
+const hsvg = `<svg class='hsvg' width="64" height="64" viewBox="0 0 64 64"><rect x="12" y="9.5" width="40" height="40" rx="20" /><rect x="9.05" y="51.5" width="46" height="46" rx="23" /></svg>`;
+const aisvg = `<svg class='aisvg' width="64" height="64" viewBox="0 0 64 64"><rect x="9" y="9.5" width="46" height="39" rx="14.5" /><circle cx="22" cy="28" r="6" /><circle cx="42" cy="28" r="6" /><rect x="27.35" y="0" width="9.5" height="9.5" rx="4.75" /><rect x="0" y="20.5" width="16" height="17" rx="8.5" /><rect x="48" y="20.5" width="16" height="17" rx="8.5" /><rect x="9.05" y="51.5" width="46" height="46" rx="23" /></svg>`;
+const xsvg = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="x-icon"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>`;
+const osvg = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="o-icon"><circle cx="12" cy="12" r="6"/></svg>`;
+const statusbar = document.querySelector('.status');
+const heading = document.querySelector('.heading');
+const restart = document.querySelector('.restart');
+const home = document.querySelector('.home');
+const start = document.querySelector('.start');
+const board = document.querySelector('.board');
+const hvh = document.querySelector('.hvh');
+const hva = document.querySelector('.hva');
+const play = document.querySelector('.play');
+const leftplayer = document.querySelector('.leftplayer');
+const rightplayer = document.querySelector('.rightplayer');
+const norm = document.querySelector('.norm');
+const hipe = document.querySelector('.hipe');
+const winningLine = document.getElementById('winningLine');
+const toggle = document.getElementById('themeToggle');
+const root = document.documentElement;
+const body = document.body;
+
+let lightMode = false,activeplayer = null, player1 = [], player2 = [], noai = true, cwf = 0, ch, n = 0, i, j, k, hl = [], ml = [], hlc = 0, mlc = 0, num = 1, sh, o, ai, h, winwidth = 0,
     a = [
         [4, 9, 2],
         [3, 5, 7],
@@ -17,42 +32,158 @@ let cwf = 0, ch, n = 0, i, j, k, hl = [], ml = [], hlc = 0, mlc = 0, num = 1, sh
         [1, 2, 3]
     ];
 
-document.getElementById('yes').addEventListener('click', function () {
-    ai = 'O';
-    h = 'X';
-    start.style.display = 'none';
-    restart.style.display = 'block';
-    board.style.display = 'flex';
-});
-
-document.getElementById('no').addEventListener('click', function () {
-    ai = 'X';
-    h = 'O';
-    machine();
-    start.style.display = 'none';
-    restart.style.display = 'block';
-    board.style.display = 'flex';
-});
-
 for (i = 1; i <= 3; i++)
     for (j = 1; j <= 3; j++) {
         let divb = document.getElementById('a' + `${i}${j}`);
         divb.data = i;
         divb.classList.add(`${j}`);
         divb.addEventListener('click', function () {
-            if (status.style.display !== 'flex') {
-                if (divb.textContent === '') {
+            if (statusbar.innerHTML === '') {
+                if (divb.innerHTML === '') {
+                    board.style.pointerEvents = 'none';
                     n++;
-                    divb.textContent = h;
+                    if (h === 'X') {
+                        divb.innerHTML = `${xsvg}`;
+                    } else {
+                        divb.innerHTML = `${osvg}`;
+                    }
                     divb.classList.add(`${h}`);
-                    hl[hlc++] = a[parseInt(divb.data) - 1][parseInt(divb.classList[1]) - 1];
+                    if (noai === true) {
+                        if (player1.selection === h) {
+                            hl[hlc++] = a[parseInt(divb.data) - 1][parseInt(divb.classList[1]) - 1];
+                        } else {
+                            ml[mlc++] = a[parseInt(divb.data) - 1][parseInt(divb.classList[1]) - 1];
+                        }
+                    } else {
+                        hl[hlc++] = a[parseInt(divb.data) - 1][parseInt(divb.classList[1]) - 1];
+                    }
                     checkwin();
-                    if (n < 9 && cwf == 0)
-                        machine();
+                    if (cwf == 0) {
+                        setTimeout(() => {
+                            board.style.pointerEvents = 'auto';
+                            changeopacity();
+                        }, 300);
+                    }
+                    if (n < 9 && cwf == 0) {
+                        if (noai === false) {
+                            setTimeout(machine, 300);
+                        } else {
+                            if (h === player1.selection) {
+                                h = player2.selection;
+                            } else {
+                                h = player1.selection;
+                            }
+                        }
+                    }
                 }
             }
         });
     }
+
+hvh.addEventListener('click', function () {
+    if (hva.classList.contains('active')) {
+        hva.classList.remove('active');
+        hva.classList.add('passive');
+        norm.style.transform = 'translateX(-25%)';
+        hipe.style.transform = 'translateX(75%)';
+        hipe.style.opacity = '0';
+    }
+    if (!hvh.classList.contains('active')) {
+        hvh.classList.add('active');
+        hvh.classList.remove('passive');
+    }
+});
+
+hva.addEventListener('click', function () {
+    if (hvh.classList.contains('active')) {
+        hvh.classList.remove('active');
+        hvh.classList.add('passive');
+        norm.style.transform = 'translateX(33%)';
+        hipe.style.transform = 'translateX(16.5%)';
+        hipe.style.opacity = '1';
+    }
+    if (!hva.classList.contains('active')) {
+        hva.classList.add('active');
+        hva.classList.remove('passive');
+    }
+});
+
+hipe.addEventListener('click', function () {
+    if (hipe.classList.contains('on')) {
+        hipe.classList.remove('on');
+        hipe.classList.add('off');
+    } else {
+        hipe.classList.add('on');
+        hipe.classList.remove('off');
+    }
+});
+
+norm.addEventListener('click', function () {
+    if (norm.classList.contains('on')) {
+        norm.classList.remove('on');
+        norm.classList.add('off');
+    } else {
+        norm.classList.add('on');
+        norm.classList.remove('off');
+    }
+});
+
+function startGame() {
+    if (hvh.classList.contains('active')) {
+        noai = true;
+        player1.type = 'h';
+        player2.type = 'h';
+        leftplayer.innerHTML = `${hsvg}`;
+        rightplayer.innerHTML = `${hsvg}`;
+    } else {
+        noai = false;
+        if (hipe.classList.contains('on')) {
+            player1.type = 'ai';
+            player2.type = 'h';
+            leftplayer.innerHTML = `${aisvg}`;
+            rightplayer.innerHTML = `${hsvg}`;
+        } else {
+            player1.type = 'h';
+            player2.type = 'ai';
+            leftplayer.innerHTML = `${hsvg}`;
+            rightplayer.innerHTML = `${aisvg}`;
+        }
+    }
+    if (norm.classList.contains('on')) {
+        player1.selection = 'O';
+        player2.selection = 'X';
+        leftplayer.innerHTML += `${osvg}`;
+        rightplayer.innerHTML += `${xsvg}`;
+    } else {
+        player1.selection = 'X';
+        player2.selection = 'O';
+        leftplayer.innerHTML += `${xsvg}`;
+        rightplayer.innerHTML += `${osvg}`;
+    }
+    if (noai === false) {
+        if (player1.type === 'ai') {
+            ai = player1.selection;
+            h = player2.selection;
+            machine();
+        } else {
+            ai = player2.selection;
+            h = player1.selection;
+        }
+    } else {
+        h = player1.selection;
+        ai = player2.selection;
+    }
+    changeopacity();
+}
+
+play.addEventListener('click', function () {
+    startGame();
+    heading.style.display = 'none';
+    start.style.display = 'none';
+    restart.style.display = 'block';
+    home.style.display = 'block';
+    board.style.display = 'grid';
+});
 
 function posswin(f) {
     for (i = 0; i < 4; i++)
@@ -132,11 +263,23 @@ function machine() {
         for (j = 1; j <= 3; j++)
             if (ch === t[i - 1][j - 1]) {
                 if (empt(cnvrtr(ch))) {
-                    document.getElementById('a' + `${i}${j}`).textContent = ai;
+                    board.style.pointerEvents = 'none';
+
+                    if (ai === 'X') {
+                        document.getElementById('a' + `${i}${j}`).innerHTML = `${xsvg}`;
+                    } else {
+                        document.getElementById('a' + `${i}${j}`).innerHTML = `${osvg}`;
+                    }
                     document.getElementById('a' + `${i}${j}`).classList.add(`${ai}`);
                     n++;
                     ml[mlc++] = cnvrtr(ch);
                     checkwin();
+                    if (cwf == 0) {
+                        setTimeout(() => {
+                            board.style.pointerEvents = 'auto';
+                            changeopacity();
+                        }, 300);
+                    }
                 }
             }
 }
@@ -148,33 +291,55 @@ function empt(cho) {
     return 1;
 }
 
+function changeopacity() {
+    if (n % 2 === 0) {
+        leftplayer.style.opacity = '1';
+        rightplayer.style.opacity = '0.3';
+    } else {
+        leftplayer.style.opacity = '0.3';
+        rightplayer.style.opacity = '1';
+    }
+}
+
 function checkwin() {
     for (let i3 = 0; i3 < 3; i3++)
         for (let j3 = i3 + 1; j3 < 4; j3++)
             for (let k3 = j3 + 1; k3 < 5; k3++) {
                 if ((hl[i3] !== 0 && hl[j3] !== 0 && hl[k3] !== 0) && (hl[i3] + hl[j3] + hl[k3] === 15)) {
-                    status.style.display = 'flex';
-                    wld.textContent = "You Won!";
+                    board.style.pointerEvents = 'none';
+                    if (h === 'X') {
+                        statusbar.innerHTML = `${xsvg} Won!`;
+                    } else {
+                        statusbar.innerHTML = `${osvg} Won!`;
+                    }
                     cwf = 1;
                     winningLine.classList.add(`${h}l`);
                     drawWinningLine((hl[i3]), (hl[j3]), (hl[k3]));
                     return;
                 } else if ((ml[i3] !== 0 && ml[j3] !== 0 && ml[k3] !== 0) && (ml[i3] + ml[j3] + ml[k3] === 15)) {
-                    status.style.display = 'flex';
-                    wld.textContent = "You Lost!";
+                    board.style.pointerEvents = 'none';
+                    if (ai === 'X') {
+                        statusbar.innerHTML = `${xsvg} Won!`;
+                    } else {
+                        statusbar.innerHTML = `${osvg} Won!`;
+                    }
                     cwf = 1;
                     winningLine.classList.add(`${ai}l`);
                     drawWinningLine((ml[i3]), (ml[j3]), (ml[k3]));
                     return;
                 } else if (n === 9) {
-                    status.style.display = 'flex';
-                    wld.textContent = "Draw!";
+                    board.style.pointerEvents = 'none';
+                    statusbar.textContent = "Draw!";
                     cwf = 1;
+                } else {
+                    // changeopacity();
                 }
             }
 }
 
 function drawWinningLine(i3, j3, k3) {
+    let left = '0%';
+    let top = '0%';
 
     winningLine.style.display = 'block';
     winningLine.style.width = '0px';
@@ -187,9 +352,7 @@ function drawWinningLine(i3, j3, k3) {
     const enddiv = document.querySelector(`.gc${wle}`).getBoundingClientRect();
     const centerdiv = document.querySelector(`.gc${wlc}`).getBoundingClientRect();
 
-    const windiv = winningLine.getBoundingClientRect();
-    winwidth = windiv.width + 'px';
-    winningLine.style.minWidth = '0px';
+    winwidth = '94%';
     const startX = startdiv.left;
     const startY = startdiv.top;
     const endX = enddiv.left;
@@ -198,20 +361,22 @@ function drawWinningLine(i3, j3, k3) {
     let angle = Math.atan2(endY - startY, endX - startX) * 180 / Math.PI;
 
     if (angle === 180 || angle === 0) {
+        left = '3%';
         if (wlc === 9) {
-            winningLine.style.top = `${windiv.top + (startdiv.width / 2) - 20}px`;
+            top = '16%';
         } else if (wlc === 5) {
-            winningLine.style.top = `${windiv.top + ((startdiv.width / 2) * 3) - 12}px`;
+            top = '49%';
         } else {
-            winningLine.style.top = `${windiv.top + ((startdiv.width / 2) * 5) - 5}px`;
+            top = '82.5%';
         }
     } else if (angle === 90 || angle === 170) {
-        winningLine.style.top = `${windiv.top + ((startdiv.width / 2) * 3) - 12}px`;
+        top = '49%';
         if (wlc === 5) {
+            left = '3%';
         } else if (wlc === 3) {
-            winningLine.style.left = `${windiv.left - startdiv.width - 16}px`;
+            left = '-30.25%'
         } else {
-            winningLine.style.left = `${windiv.left + startdiv.width}px`;
+            left = '36.5%';
         }
     } else {
         if (angle < 90) {
@@ -219,20 +384,59 @@ function drawWinningLine(i3, j3, k3) {
         } else {
             angle = 135;
         }
-        winningLine.style.top = `${windiv.top + ((startdiv.width / 2) * 3) - 13}px`;
-        if (startdiv.width === 140) {
-            winningLine.style.left = `${windiv.left - (startdiv.width / 2) - 24}px`;
-            winwidth = '594px';
-        } else {
-            winningLine.style.left = `${windiv.left - (startdiv.width / 2) - 20}px`;
-            winwidth = '425px';
-        }
+        left = '-16%';
+        top = '49%';
+        winwidth = '132%';
     }
+    winningLine.style.left = left;
+    winningLine.style.top = top;
     winningLine.style.transform = `rotate(${angle}deg)`;
-    setTimeout(chngw, 1);
+    winningLine.style.width = winwidth;
+
+    setTimeout(() => {
+        document.querySelector('.chld').style.width = '100%';
+    }, 300);
 }
 
-function chngw() {
-    winningLine.style.width = winwidth;
-    document.querySelector('.chld').style.width = winwidth;
-}
+restart.addEventListener('click', function () {
+    for (i = 1; i <= 3; i++)
+        for (j = 1; j <= 3; j++) {
+            document.getElementById('a' + `${i}${j}`).innerHTML = '';
+            document.getElementById('a' + `${i}${j}`).classList.remove('X');
+            document.getElementById('a' + `${i}${j}`).classList.remove('O');
+        }
+    statusbar.innerHTML = '';
+    winningLine.style.display = 'none';
+    winningLine.classList.remove(`${h}l`);
+    winningLine.classList.remove(`${ai}l`);
+    cwf = 0, n = 0, hl = [], ml = [], hlc = 0, mlc = 0, num = 1, winwidth = 0,
+        a = [
+            [4, 9, 2],
+            [3, 5, 7],
+            [8, 1, 6]
+        ],
+        t = [
+            [7, 8, 9],
+            [4, 5, 6],
+            [1, 2, 3]
+        ];
+    board.style.pointerEvents = 'auto';
+    startGame();
+});
+
+toggle.addEventListener('click', () => {
+    
+    lightMode = !lightMode;
+
+    if (lightMode) {
+        body.classList.add('light-mode');
+        body.classList.remove('dark-mode');
+        root.style.setProperty('--primary-color', '#f0f0f0');
+        root.style.setProperty('--secondary-color', '#1a1a1a');
+    } else {
+        body.classList.remove('light-mode');
+        body.classList.add('dark-mode');
+        root.style.setProperty('--primary-color', '#1a1a1a');
+        root.style.setProperty('--secondary-color', '#f0f0f0');
+    }
+});
