@@ -439,4 +439,21 @@ toggle.addEventListener('click', () => {
         root.style.setProperty('--primary-color', '#1a1a1a');
         root.style.setProperty('--secondary-color', '#f0f0f0');
     }
+    localStorage.setItem('theme', lightMode ? 'light' : 'dark');
 });
+
+window.onload = function () {
+    localStorage.getItem('theme') === 'light' ? lightMode = true : lightMode = false;
+    
+    if (lightMode) {
+        body.classList.add('light-mode');
+        body.classList.remove('dark-mode');
+        root.style.setProperty('--primary-color', '#f0f0f0');
+        root.style.setProperty('--secondary-color', '#1a1a1a');
+    } else {
+        body.classList.remove('light-mode');
+        body.classList.add('dark-mode');
+        root.style.setProperty('--primary-color', '#1a1a1a');
+        root.style.setProperty('--secondary-color', '#f0f0f0');
+    }
+};
